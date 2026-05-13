@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import Timer from "./components/Timer";
 import Kitty from "./components/Kitty.jsx";
+import TaskList from "./components/TaskList.jsx";
 
 export default function App() {
 
@@ -22,6 +23,7 @@ export default function App() {
         setIsRunning={setIsRunning}
         isFinished={isFinished}
         setIsFinished={setIsFinished} />
+      <TaskList />
     </>
   );
 }
