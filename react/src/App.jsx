@@ -5,6 +5,8 @@ import Kitty from "./components/Kitty.jsx";
 import TaskList from "./components/TaskList.jsx";
 import Login from "./components/Login.jsx";
 
+import "./App.css";
+
 export default function App() {
 
   const [mode, setMode] = useState("work");
@@ -37,21 +39,7 @@ export default function App() {
         >
           <button
             onClick={() => setLoginFormVisibility(true)}
-            style={{
-              background: "none",
-              border: "none",
-              padding: 0,
-              color: "#2563eb",
-              textDecoration: "underline",
-              cursor: "pointer",
-              fontSize: "inherit",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.opacity = "0.7";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.opacity = "1";
-            }}
+            className="login-link"
           >
             Login
           </button>

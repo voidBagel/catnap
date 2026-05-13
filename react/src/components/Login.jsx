@@ -1,46 +1,63 @@
 import { useState } from "react";
+import "../App.css";
+import useAuth from "../hooks/useAuth";
 
 export default function Login({ onLogin }) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+
+    const { login } = useAuth();
+
+    const [form, setForm] = useState({
+        username: "",
+        password: "",
+    });
+
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setForm((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
     const handleLogin = async () => {
-        const res = await fetch("http://localhost:3001/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({ username, password }),
-        });
+        try {
+            setLoading(true);
+            setError("");
 
-        if (res.ok) {
-            const data = await res.json();
+            const data = await login(form);
+
             onLogin(data.username);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={
-            {
-                display: "flex",
-                flexDirection: "column",
-            }
-        }>
+        <div className="login-container">
             <input
+                name="username"
                 placeholder="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={form.username}
+                onChange={handleChange}
             />
 
             <input
-                placeholder="password"
+                name="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="password"
+                value={form.password}
+                onChange={handleChange}
             />
 
-            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleLogin} disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+            </button>
+
+            {error && <p className="error">{error}</p>}
         </div>
     );
 }
