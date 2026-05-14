@@ -5,7 +5,9 @@ import Kitty from "./components/Kitty.jsx";
 import TaskList from "./components/TaskList.jsx";
 import Login from "./components/Login.jsx";
 
-import "./App.css";
+import "./styles/globals.css";
+import "./styles/modal.css";
+import "./styles/login.css";
 
 export default function App() {
 
@@ -18,34 +20,53 @@ export default function App() {
 
   return (
     <>
-      {username !== 'guest' ? (
-        <>
-          Hello {username}
-          <TaskList />
-        </>
-      ) : loginformVisibility ? (
-        <Login
-          onLogin={(username) => {
-            setUsername(username);
-            setLoginFormVisibility(false);
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end"
-          }}
-        >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        {username === "guest" && (
           <button
             onClick={() => setLoginFormVisibility(true)}
             className="login-link"
           >
             Login
           </button>
+        )}
 
+        {username !== "guest" && (
+          <p>Hello {username}</p>
+        )}
+      </div>
+
+      {loginformVisibility && (
+        <div
+          className="modal-overlay"
+          onClick={() => setLoginFormVisibility(false)}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setLoginFormVisibility(false)}
+            >
+              ×
+            </button>
+
+            <Login
+              onLogin={(username) => {
+                setUsername(username);
+                setLoginFormVisibility(false);
+              }}
+            />
+          </div>
         </div>
       )}
+
+      {username !== "guest" && <TaskList />}
       <Kitty
         mode={mode}
         isRunning={isRunning}

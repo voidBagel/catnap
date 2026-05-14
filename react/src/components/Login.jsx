@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../App.css";
+import "../styles/login.css";
 import useAuth from "../hooks/useAuth";
 
 export default function Login({ onLogin }) {

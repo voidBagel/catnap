@@ -1,0 +1,15 @@
+:root {
+  --color-primary: #2563eb;
+  --color-danger: #dc2626;
+
+  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
