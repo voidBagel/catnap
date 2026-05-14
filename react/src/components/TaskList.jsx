@@ -1,58 +1,30 @@
 import React, { useMemo, useState, useEffect } from "react";
 import AddTask from "./AddTask.jsx";
 
+import useTasks from "../hooks/useTasks";
+
 
 export default function TaskList() {
-
-
-  const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
-  useEffect(() => {
-    fetch("http://localhost:3001/tasks")
-      .then((res) => res.json())
-      .then(setTasks);
-  }, []);
+  const {
+    tasks,
+    addTask,
+    removeTask,
+    toggleTask,
+  } = useTasks();
 
-  const fetchTasks = () => {
-    fetch("http://localhost:3001/tasks")
-      .then((res) => res.json())
-      .then(setTasks);
-  };
+  async function handleAddTask() {
+    await addTask(newTask);
+
+    setNewTask("");
+  }
 
   const sortedTasks = useMemo(() => {
     return [...tasks].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
   }, [tasks]);
-
-  const addTask = () => {
-    if (!newTask.trim()) return;
-
-    const task = {
-      id: Date.now(),
-      description: newTask.trim(),
-      completed: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    setTasks((prev) => [task, ...prev]);
-    setNewTask("");
-  };
-
-  const toggleTask = (id) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    );
-  };
-
-  const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleString();
@@ -63,7 +35,7 @@ export default function TaskList() {
       <AddTask
         newTask={newTask}
         setNewTask={setNewTask}
-        onTaskAdded={fetchTasks}
+        onTaskAdded={handleAddTask}
       />
       <div
         style={{ display: "flex", flexDirection: "column", gap: "12px" }}
@@ -106,7 +78,7 @@ export default function TaskList() {
             </div>
 
             <button
-              onClick={() => deleteTask(task.id)}
+              onClick={() => removeTask(task.id)}
             >
               Delete
             </button>
